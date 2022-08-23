@@ -173,6 +173,37 @@ def loop():
       Enemy_list.append(enemy)
       posx = posx + 200
 
+  def menu():
+    pygame.init()
+    window = pygame.display.set_mode((ancho,alto))
+    pygame.display.set_caption("Space Invader")
+    ImageBackground = pygame.image.load("images_game/Fondo.jpg")
+
+    titleFont = pygame.font.SysFont("Arial",60,bold=True)
+    subFont = pygame.font.SysFont("Arial",28)
+
+    title = titleFont.render("SPACE INVADER",0,(255,255,255))
+    startText = subFont.render("Presiona ENTER para empezar",0,(220,220,220))
+    quitText = subFont.render("Presiona ESC para salir",0,(220,220,220))
+
+    while True:
+      for event in pygame.event.get():
+        if event.type == QUIT:
+          pygame.quit()
+          sys.exit()
+        if event.type == pygame.KEYDOWN:
+          if event.key == K_RETURN:
+            return
+          elif event.key == K_ESCAPE:
+            pygame.quit()
+            sys.exit()
+
+      window.blit(ImageBackground,(0,0))
+      window.blit(title,(ancho/2 - title.get_width()/2, 180))
+      window.blit(startText,(ancho/2 - startText.get_width()/2, 320))
+      window.blit(quitText,(ancho/2 - quitText.get_width()/2, 370))
+      pygame.display.update()
+
   def SpaceInvader():
     pygame.init()
     window=pygame.display.set_mode((ancho,alto))
@@ -186,7 +217,9 @@ def loop():
     Texto = miFuenteSistema.render("Game Over!",0,(120,100,40))
     miFuenteSistema1 = pygame.font.SysFont("Arial",30)
     Texto1 = miFuenteSistema.render("You win!",0,(120,100,40))
+    retryText = miFuenteSistema.render("R: Reintentar    ESC: Menu",0,(255,255,255))
 
+    Enemy_list.clear()
     player = Spaceship()
     loadEnemies()
     ongoing = True
@@ -197,12 +230,13 @@ def loop():
       timer.tick(60)
       time = int(pygame.time.get_ticks()/1000)
 
+      gameActive = ongoing and len(Enemy_list) > 0
       for event in pygame.event.get():
         if event.type == QUIT:
           pygame.quit()
           sys.exit()
-        if ongoing == True:
-          if event.type == pygame.KEYDOWN:
+        if event.type == pygame.KEYDOWN:
+          if gameActive:
             if event.key == K_LEFT:
               player.LeftMovement()
 
@@ -212,6 +246,11 @@ def loop():
             elif event.key == K_SPACE:
               x,y = player.rect.center
               player.Shooter(x,y)
+          else:
+            if event.key == K_r:
+              return "retry"
+            elif event.key == K_ESCAPE:
+              return "menu"
 
 
       window.blit(ImageBackground,(0,0))
@@ -231,6 +270,7 @@ def loop():
       if len(Enemy_list)==0:
         pygame.mixer.music.fadeout(3000)
         window.blit(Texto1,(300,300))
+        window.blit(retryText,(280,350))
 
       if len(Enemy_list)>0:
         for enemy in Enemy_list:
@@ -262,8 +302,13 @@ def loop():
       if ongoing == False:
         pygame.mixer.music.fadeout(3000)
         window.blit(Texto,(300,300))
+        window.blit(retryText,(280,350))
 
       pygame.display.update()
 
-  SpaceInvader()
+  while True:
+    menu()
+    action = "retry"
+    while action == "retry":
+      action = SpaceInvader()
 loop()

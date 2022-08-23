@@ -13,9 +13,15 @@ python game.py
 ```
 
 ## Features
+- Start menu and retry/return-to-menu flow after winning or losing
 - Player-controlled spaceship with left/right movement and shooting
 - 12 enemies across 3 rows, each with unique sprites and animated frames
 - Enemies move laterally and descend toward the player over time
 - Collision detection for bullets and ships
 - Sound effects for shooting and explosions, with background music
 - Win/lose conditions with on-screen messages
+
+## Controls
+- **Menu:** `ENTER` to start, `ESC` to quit
+- **In-game:** `LEFT`/`RIGHT` to move, `SPACE` to shoot
+- **Game over / win:** `R` to retry, `ESC` to return to menu
